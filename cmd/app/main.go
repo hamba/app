@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/hamba/cmd"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli/v2"
 )
 
 import _ "github.com/joho/godotenv/autoload"
