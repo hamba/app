@@ -10,8 +10,7 @@ import (
 	"github.com/hamba/cmd"
 	"github.com/hamba/pkg/httpx"
 	"github.com/hamba/pkg/log"
-	"github.com/hamba/pkg/stats"
-	"gopkg.in/urfave/cli.v2"
+	"github.com/urfave/cli/v2"
 )
 
 func runServer(c *cli.Context) error {
@@ -26,7 +25,7 @@ func runServer(c *cli.Context) error {
 	}
 
 	port := c.String(cmd.FlagPort)
-	s := newServer(ctx, app)
+	s := newServer(app)
 	log.Info(ctx, fmt.Sprintf("Starting server on port %s", port))
 	if err := http.ListenAndServe(":"+port, s); err != nil {
 		log.Fatal(ctx, "app: server error", "error", err.Error())
@@ -35,9 +34,9 @@ func runServer(c *cli.Context) error {
 	return nil
 }
 
-func newServer(sable stats.Statable, app *app.Application) http.Handler {
+func newServer(app *app.Application) http.Handler {
 	health := httpx.NewHealthMux(app)
-	met := httpx.NewStatsMux(sable.Statter())
+	met := httpx.NewStatsMux(app.Statter())
 	srv := server.NewMux(app)
 	mux := httpx.CombineMuxes(health, met, srv)
 
